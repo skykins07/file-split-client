@@ -137,7 +137,6 @@ public class Login extends JFrame
 //            }else{
 //                JOptionPane.showMessageDialog(Login.this,response);
 //            }
-            System.out.println("Testing");
         }catch(Exception e){
             e.printStackTrace();
         }

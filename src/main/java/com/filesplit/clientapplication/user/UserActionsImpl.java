@@ -8,7 +8,7 @@ import java.sql.*;
 public class UserActionsImpl implements UserActions{
     @Override
     public String verifyUser(Connection connection, String userId, String password) {
-        String msg="fail";
+        String msg="login failed: user not found";
         Statement stmt= null;
         try {
             stmt = connection.createStatement();
