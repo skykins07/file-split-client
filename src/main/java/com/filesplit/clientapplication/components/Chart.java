@@ -1,4 +1,4 @@
-package com.filesplit.clientapplication;
+package com.filesplit.clientapplication.components;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;

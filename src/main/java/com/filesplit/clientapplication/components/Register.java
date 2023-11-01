@@ -1,27 +1,23 @@
-package com.filesplit.clientapplication;
+package com.filesplit.clientapplication.components;
 
 import com.filesplit.clientapplication.config.DBConnection;
 import com.filesplit.clientapplication.user.UserActionsImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.sql.Connection;
-import java.util.List;
 import java.util.Random;
 
-public class Login extends JFrame
+
+public class Register extends JFrame
 {
     JPanel p1,p2;
-    JLabel l1,l2;
+    JLabel l1,l2,l3;
     JButton b1,b2;
     Font f1,f2;
-    JTextField tf1,tf2;
+    JTextField tf1,tf2,tf3;
     UserScreen users;
 
 
@@ -29,7 +25,7 @@ public class Login extends JFrame
         Random r = new Random();
         return r.nextInt(2);
     }
-    public Login(UserScreen usr){
+    public Register(UserScreen usr){
         users = usr;
         setTitle("Cloud User Screen");
         f1 = new Font("Courier New",Font.BOLD+Font.ITALIC,18);
@@ -63,20 +59,28 @@ public class Login extends JFrame
         tf2.setBounds(220,70,120,30);
         p2.add(tf2);
 
+        l3 = new JLabel("Email ID");
+        l3.setFont(f2);
+        l3.setBounds(100,120,120,30);
+        p2.add(l3);
+        tf3 = new JTextField();
+        tf3.setFont(f2);
+        tf3.setBounds(220,120,120,30);
+        p2.add(tf3);
 
-        b1 = new JButton("Login");
+        b1 = new JButton("Register");
         b1.setFont(f2);
-        b1.setBounds(120,120,200,30);
+        b1.setBounds(120,170,200,30);
         p2.add(b1);
         b1.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ae){
-                login();
+                register();
             }
         });
 
         b2 = new JButton("Back");
         b2.setFont(f2);
-        b2.setBounds(340,120,100,30);
+        b2.setBounds(340,170,100,30);
         p2.add(b2);
         b2.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ae){
@@ -88,9 +92,10 @@ public class Login extends JFrame
         getContentPane().add(p1, "North");
         getContentPane().add(p2, "Center");
     }
-    public void login(){
+    public void register(){
         String user = tf1.getText();
         String pass = tf2.getText();
+        String email = tf3.getText();
         if(user == null || user.trim().length() <= 0){
             JOptionPane.showMessageDialog(this,"Username must be enter");
             tf1.requestFocus();
@@ -101,47 +106,69 @@ public class Login extends JFrame
             tf2.requestFocus();
             return;
         }
+        if(email == null || email.trim().length() <= 0){
+            JOptionPane.showMessageDialog(this,"Emailid must be enter");
+            tf3.requestFocus();
+            return;
+        }
+        if(!CheckMail.checkMail(email)){
+            JOptionPane.showMessageDialog(this,"Enter valid mailid");
+            tf3.requestFocus();
+            return;
+        }
         try{
             DBConnection dbConnection=new DBConnection();
             Connection connection=dbConnection.initializeConnection();
             UserActionsImpl userActions=new UserActionsImpl();
-            String returnString=userActions.verifyUser(connection,user,pass);
-
-            if("success".equalsIgnoreCase(returnString)){
+            String returnMsg=userActions.addUser(connection,user,pass,email);
+            if("user registration completed".equalsIgnoreCase(returnMsg)){
                 setVisible(false);
-                JOptionPane.showMessageDialog(Login.this,"User login successfull");
-                ClientScreen cs = new ClientScreen(users,user);
-                cs.setVisible(true);
-                cs.setSize(650,550);
-            }else{
-                JOptionPane.showMessageDialog(Login.this,returnString);
+                JOptionPane.showMessageDialog(Register.this,"user registration completed");
+                users.setVisible(true);
             }
+
+
+
 
 //            Socket socket = new Socket("localhost",1111);
 //            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-//            Object req[]={"userlogin",user,pass};
+//            Object req[]={"userregister",user,pass,email};
 //            out.writeObject(req);
 //            out.flush();
 //            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 //            Object res[] = (Object[])in.readObject();
 //            String response = (String)res[0];
-
-//            String response="fail";
-//            List<User> userList=userRepository.getUserByIdAndEmail(user,pass);
-//            if(!CollectionUtils.isEmpty(userList)){
+//            JOptionPane.showMessageDialog(Register.this,response);
+//            if(response.equals("user registration completed")){
+//                socket = new Socket("localhost",1111);
+//                out = new ObjectOutputStream(socket.getOutputStream());
+//                Object req1[]={"userregister",user,pass,email};
+//                out.writeObject(req1);
+//                out.flush();
+//                in = new ObjectInputStream(socket.getInputStream());
+//                Object res1[] = (Object[])in.readObject();
+//
+//                socket = new Socket("localhost",2222);
+//                out = new ObjectOutputStream(socket.getOutputStream());
+//                Object req2[]={"userregister",user};
+//                out.writeObject(req2);
+//                out.flush();
+//                in = new ObjectInputStream(socket.getInputStream());
+//                Object res2[] = (Object[])in.readObject();
+//
+//                socket = new Socket("localhost",3333);
+//                out = new ObjectOutputStream(socket.getOutputStream());
+//                out.writeObject(req2);
+//                out.flush();
+//                in = new ObjectInputStream(socket.getInputStream());
+//                Object res3[] = (Object[])in.readObject();
+//
 //                setVisible(false);
-//                JOptionPane.showMessageDialog(Login.this,"User login successfull");
-//                ClientScreen cs = new ClientScreen(users,user);
-//                cs.setVisible(true);
-//                cs.setSize(650,550);
-//            }else{
-//                JOptionPane.showMessageDialog(Login.this,response);
+//                JOptionPane.showMessageDialog(Register.this,response);
+//                users.setVisible(true);
 //            }
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 }
-
-//success
-//fail

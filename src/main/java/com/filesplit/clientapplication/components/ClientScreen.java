@@ -1,18 +1,26 @@
-package com.filesplit.clientapplication;
+package com.filesplit.clientapplication.components;
 
+import com.filesplit.clientapplication.model.BlockDetail;
+import com.filesplit.clientapplication.model.Response;
 import org.jfree.ui.RefineryUtilities;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
-import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
+@Component
 public class ClientScreen extends JFrame {
+
     JPanel p1,p2;
     JLabel l1,l2,l3;
     JTextField tf1,tf2;
@@ -65,27 +73,30 @@ public class ClientScreen extends JFrame {
     public void send(){
         try{
             int port = 1111;
+            RestTemplate template=new RestTemplate();
+            Map<String,String> headers=new HashMap<>();
+            headers.put("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+
+            String client1BaseUrl="http://localhost:1111/cloudserver1";
+            String client2BaseUrl="http://localhost:2222/cloudserver2";
+            String client3BaseUrl="http://localhost:3333/cloudserver3";
+            String serverUrl=client1BaseUrl;
             long start = System.currentTimeMillis();
             StringBuilder sb = new StringBuilder();
-            for(int i=0;i<blocks.length;i++){
-                String name = (String)blocks[i][0];
-                byte b[] = (byte[])blocks[i][1];
-                Socket socket = new Socket("localhost",port);
-                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-                Object req[]={"blocks",username,file.getName(),name,b};
-                out.writeObject(req);
-                out.flush();
-                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-                Object res[] = (Object[])in.readObject();
-                String response = (String)res[0];
-                System.out.println(response.toString());
-                sb.append(response+"\n");
-                if(port == 1111)
-                    port = 2222;
-                else if(port == 2222)
-                    port = 3333;
-                else if(port == 3333)
-                    port = 1111;
+            for (Object[] block : blocks) {
+                int b_num=Integer.parseInt(block[0].toString());
+                byte[] b_content = (byte[]) block[1];
+                BlockDetail inputBD = new BlockDetail(username, file.getName(), b_num, b_content,null);
+                ResponseEntity<Response> respObj = template.postForEntity(serverUrl.concat("/storeBlockContent"),
+                        inputBD, Response.class, headers);
+                String response = Objects.requireNonNull(respObj.getBody()).getReturnMessage();
+                sb.append(response).append("\n");
+//                if (serverUrl.contains("1111"))
+//                    serverUrl = client2BaseUrl;
+//                else if (serverUrl.contains("2222"))
+//                    serverUrl = client3BaseUrl;
+//                else
+//                    serverUrl = client1BaseUrl;
             }
             long end = System.currentTimeMillis();
             propose = end - start;
@@ -133,7 +144,7 @@ public class ClientScreen extends JFrame {
             public void actionPerformed(ActionEvent ae){
                 size = calculateBlock();
                 blocks = getBlocks();
-                JOptionPane.showMessageDialog(ClientScreen.this,"Fragments generated successfully6");
+                JOptionPane.showMessageDialog(ClientScreen.this,"Fragments generated successfully ".concat(String.valueOf(tot_blocks)));
             }
         });
 
@@ -157,7 +168,7 @@ public class ClientScreen extends JFrame {
                 df.setVisible(true);
                 df.setLocationRelativeTo(null);
                 df.setSize(300,200);
-                df.getFileName();
+                df.getFileNameFromServer();
             }
         });
 

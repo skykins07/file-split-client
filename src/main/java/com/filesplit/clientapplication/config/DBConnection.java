@@ -8,19 +8,6 @@ import java.sql.DriverManager;
 
 @Configuration
 public class DBConnection {
-
-//    @Value("${datasource.mqsql.driver}")
-//    private String driver;
-//
-//    @Value("${datasource.mqsql.connection}")
-//    private String connection;
-//
-//    @Value("${datasource.mqsql.username}")
-//    private String userName;
-//
-//    @Value("${datasource.mqsql.password}")
-//    private String password;
-
     public Connection initializeConnection() {
         Connection connectionObj=null;
         try{

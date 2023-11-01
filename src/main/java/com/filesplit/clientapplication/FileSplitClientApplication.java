@@ -1,13 +1,10 @@
 package com.filesplit.clientapplication;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.filesplit.clientapplication.components.UserScreen;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScans;
-import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +12,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "com.filesplit.clientapplication.*")
+@EnableAutoConfiguration
+@ComponentScan(basePackages = {
+		"com.filesplit.clientapplication.components.*",
+		"com.filesplit.clientapplication.config.*",
+		"com.filesplit.clientapplication.model.*",
+		"com.filesplit.clientapplication.user.*"})
 public class FileSplitClientApplication {
 
 	public static void main(String[] args) {
