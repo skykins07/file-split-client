@@ -126,47 +126,6 @@ public class Register extends JFrame
                 JOptionPane.showMessageDialog(Register.this,"user registration completed");
                 users.setVisible(true);
             }
-
-
-
-
-//            Socket socket = new Socket("localhost",1111);
-//            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-//            Object req[]={"userregister",user,pass,email};
-//            out.writeObject(req);
-//            out.flush();
-//            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-//            Object res[] = (Object[])in.readObject();
-//            String response = (String)res[0];
-//            JOptionPane.showMessageDialog(Register.this,response);
-//            if(response.equals("user registration completed")){
-//                socket = new Socket("localhost",1111);
-//                out = new ObjectOutputStream(socket.getOutputStream());
-//                Object req1[]={"userregister",user,pass,email};
-//                out.writeObject(req1);
-//                out.flush();
-//                in = new ObjectInputStream(socket.getInputStream());
-//                Object res1[] = (Object[])in.readObject();
-//
-//                socket = new Socket("localhost",2222);
-//                out = new ObjectOutputStream(socket.getOutputStream());
-//                Object req2[]={"userregister",user};
-//                out.writeObject(req2);
-//                out.flush();
-//                in = new ObjectInputStream(socket.getInputStream());
-//                Object res2[] = (Object[])in.readObject();
-//
-//                socket = new Socket("localhost",3333);
-//                out = new ObjectOutputStream(socket.getOutputStream());
-//                out.writeObject(req2);
-//                out.flush();
-//                in = new ObjectInputStream(socket.getInputStream());
-//                Object res3[] = (Object[])in.readObject();
-//
-//                setVisible(false);
-//                JOptionPane.showMessageDialog(Register.this,response);
-//                users.setVisible(true);
-//            }
         }catch(Exception e){
             e.printStackTrace();
         }
