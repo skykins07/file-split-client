@@ -91,12 +91,12 @@ public class ClientScreen extends JFrame {
                         inputBD, Response.class, headers);
                 String response = Objects.requireNonNull(respObj.getBody()).getReturnMessage();
                 sb.append(response).append("\n");
-//                if (serverUrl.contains("1111"))
-//                    serverUrl = client2BaseUrl;
-//                else if (serverUrl.contains("2222"))
-//                    serverUrl = client3BaseUrl;
-//                else
-//                    serverUrl = client1BaseUrl;
+                if (serverUrl.contains("1111"))
+                    serverUrl = client2BaseUrl;
+                else if (serverUrl.contains("2222"))
+                    serverUrl = client3BaseUrl;
+                else
+                    serverUrl = client1BaseUrl;
             }
             long end = System.currentTimeMillis();
             propose = end - start;

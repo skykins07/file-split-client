@@ -62,19 +62,19 @@ public class DownloadFile extends JFrame
                         list.addAll(respObj.getBlockDetailList());
                     }
 
-//                    String client2BaseUrl="http://localhost:2222/cloudserver2";
-//                    respObj= template.postForEntity(client2BaseUrl.concat("/getBlockContent"),
-//                            getBlockRequest,Response.class,headers).getBody();
-//                    if(Objects.nonNull(respObj) &&!CollectionUtils.isEmpty(respObj.getBlockDetailList())){
-//                        list.addAll(respObj.getBlockDetailList());
-//                    }
+                    String client2BaseUrl="http://localhost:2222/cloudserver2";
+                    respObj= template.postForEntity(client2BaseUrl.concat("/getBlockContent"),
+                            getBlockRequest,Response.class,headers).getBody();
+                    if(Objects.nonNull(respObj) &&!CollectionUtils.isEmpty(respObj.getBlockDetailList())){
+                        list.addAll(respObj.getBlockDetailList());
+                    }
 
-//                    String client3BaseUrl="http://localhost:3333/cloudserver3";
-//                    respObj= template.postForEntity(client3BaseUrl.concat("/getBlockContent"),
-//                            getBlockRequest,Response.class,headers).getBody();
-//                    if(Objects.nonNull(respObj) &&!CollectionUtils.isEmpty(respObj.getBlockDetailList())){
-//                        list.addAll(respObj.getBlockDetailList());
-//                    }
+                    String client3BaseUrl="http://localhost:3333/cloudserver3";
+                    respObj= template.postForEntity(client3BaseUrl.concat("/getBlockContent"),
+                            getBlockRequest,Response.class,headers).getBody();
+                    if(Objects.nonNull(respObj) &&!CollectionUtils.isEmpty(respObj.getBlockDetailList())){
+                        list.addAll(respObj.getBlockDetailList());
+                    }
 
 
                     Collections.sort(list);
@@ -84,17 +84,26 @@ public class DownloadFile extends JFrame
                         del_file.createNewFile();
                     }
 
+                    String clientBaseUrl="http://localhost:1111";
                     FileOutputStream fout=new FileOutputStream(del_file,true);
                     for (BlockDetail bdObj : list) {
-//                        client1BaseUrl=client1BaseUrl.replace("1111",String.valueOf(bdObj.getPortNumber()));
                         BlockDetail downloadBlockObj=new BlockDetail(bdObj.getUserName(),bdObj.getFileName(),
                                 bdObj.getBlockNumber(),null,null);
-                        downLoadRespObj = template.postForEntity(client1BaseUrl.concat("/download"), downloadBlockObj,
-                                Response.class, headers);
+                        clientBaseUrl=clientBaseUrl.replace("1111",String.valueOf(bdObj.getPortNumber()));
+                        if(clientBaseUrl.contains("1111")){
+                            clientBaseUrl=clientBaseUrl.concat("/cloudserver1").concat("/download");
+                        }else if(clientBaseUrl.contains("2222")){
+                            clientBaseUrl=clientBaseUrl.concat("/cloudserver2").concat("/download");
+                        }else{
+                            clientBaseUrl=clientBaseUrl.concat("/cloudserver3").concat("/download");
+                        }
+
+                        downLoadRespObj = template.postForEntity(clientBaseUrl, downloadBlockObj, Response.class, headers);
                         if(Objects.nonNull(downLoadRespObj.getBody()) && downLoadRespObj.getBody().getDownloadBlockContent().length > 0){
                             byte[] data= downLoadRespObj.getBody().getDownloadBlockContent();
                             fout.write(data,0,data.length);
                         }
+                        clientBaseUrl="http://localhost:1111";
                     }
                     fout.close();
                     JOptionPane.showMessageDialog(DownloadFile.this,"File downloaded at file-split-client/Downloads directory");
@@ -110,18 +119,25 @@ public class DownloadFile extends JFrame
             c1.removeAllItems();
             Response respObj;
             RestTemplate template=new RestTemplate();
+            Set<String> displayFile=new HashSet<>();
 
             String client1BaseUrl="http://localhost:1111/cloudserver1/retrieveFileName?userName=".concat(user);
             respObj= template.getForObject(client1BaseUrl,Response.class);
-            Set<String> displayFile = new HashSet<>(respObj.getFileList());
+            if(!CollectionUtils.isEmpty(respObj.getFileList())){
+                displayFile.addAll(respObj.getFileList());
+            }
 
-//            String client2BaseUrl="http://localhost:2222/cloudserver2/retrieveFileName?userName=".concat(user);
-//            respObj= template.getForObject(client2BaseUrl,Response.class);
-//            Set<String> displayFile = new HashSet<>(respObj.getFileList());
-//
-//            String client3BaseUrl="http://localhost:3333/cloudserver3/retrieveFileName?userName=".concat(user);
-//            respObj= template.getForObject(client3BaseUrl,Response.class);
-//            Set<String> displayFile = new HashSet<>(respObj.getFileList());
+            String client2BaseUrl="http://localhost:2222/cloudserver2/retrieveFileName?userName=".concat(user);
+            respObj= template.getForObject(client2BaseUrl,Response.class);
+            if(!CollectionUtils.isEmpty(respObj.getFileList())){
+                displayFile.addAll(respObj.getFileList());
+            }
+
+            String client3BaseUrl="http://localhost:3333/cloudserver3/retrieveFileName?userName=".concat(user);
+            respObj= template.getForObject(client3BaseUrl,Response.class);
+            if(!CollectionUtils.isEmpty(respObj.getFileList())){
+                displayFile.addAll(respObj.getFileList());
+            }
 
             // Populate the display list from all the 3 servers
             if(!CollectionUtils.isEmpty(displayFile)){
