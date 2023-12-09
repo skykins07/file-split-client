@@ -109,14 +109,14 @@ public class ClientScreen extends JFrame {
     public ClientScreen(UserScreen usr,String uname){
         user = usr;
         username = uname;
-        setTitle("Cloud User Screen");
-        f1 = new Font("Courier New",Font.BOLD+Font.ITALIC,18);
+        setTitle("CLIENT APPLICATION");
+        f1 = new Font("Courier New",Font.BOLD,18);
         p1 = new JPanel();
         l1 = new JLabel("<HTML><BODY><CENTER>User Screen</CENTER></BODY></HTML>".toUpperCase());
         l1.setFont(this.f1);
-        l1.setForeground(new Color(125,254,120));
+        l1.setForeground(new Color(0,0,0));
         p1.add(l1);
-        p1.setBackground(new Color(100,30,40));
+        p1.setBackground(new Color(128,128,128));
 
         f2 = new Font("Courier New",Font.BOLD,14);
 
@@ -172,22 +172,9 @@ public class ClientScreen extends JFrame {
             }
         });
 
-        b5 = new JButton("RC versus File Fragments Graph");
-        b5.setFont(f2);
-        b5.setBounds(200,250,400,30);
-        p2.add(b5);
-        b5.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent ae){
-                Chart chart1 = new Chart("RC versus File Fragments Graph");
-                chart1.pack();
-                RefineryUtilities.centerFrameOnScreen(chart1);
-                chart1.setVisible(true);
-            }
-        });
-
         b6 = new JButton("Logout");
         b6.setFont(f2);
-        b6.setBounds(200,300,400,30);
+        b6.setBounds(200,250,400,30);
         p2.add(b6);
         b6.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent ae){

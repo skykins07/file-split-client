@@ -13,15 +13,15 @@ public class UserScreen extends JFrame {
 
     public UserScreen(){
         setTitle("Cloud User Screen");
-        f1 = new Font("Courier New",Font.BOLD+Font.ITALIC,18);
+        f1 = new Font("Times New Roman",Font.BOLD,18);
         p1 = new JPanel();
-        l1 = new JLabel("<HTML><BODY><CENTER>DROPS: Division and Replication of Data in Cloud for Optimal<br/>Performance and Security</CENTER></BODY></HTML>".toUpperCase());
+        l1 = new JLabel("<HTML><BODY><CENTER>REPLICATION AND DIVISION OF DATA IN CLOUD FOR SECURITY<br/>Performance and Security</CENTER></BODY></HTML>".toUpperCase());
         l1.setFont(this.f1);
-        l1.setForeground(new Color(125,254,120));
+        l1.setForeground(new Color(0,0,0));
         p1.add(l1);
-        p1.setBackground(new Color(100,30,40));
+        p1.setBackground(new Color(128,128,128));
 
-        f2 = new Font("Courier New",Font.BOLD,14);
+        f2 = new Font("Times New Roman",Font.BOLD,14);
 
         p2 = new JPanel();
         p2.setLayout(null);
